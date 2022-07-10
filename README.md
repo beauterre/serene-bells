@@ -7,8 +7,8 @@ And for this "instrument" I made 16 polyfonic registers.
 With some tweaking, you´ll get different instruments or chords, happy modding.
 
 
-## zen-air-bells can be found
-[here]()
+## zen-air-bells can be found here:
+[LISTEN NOW!](https://hjalmarsnoep.github.io/zen-air-bells/)
 
 If you want to learn more about webaudio try:
 https://www.phpied.com/files/webaudio/ (the base for this code)
