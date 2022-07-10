@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width"/>
+	<title>Zen Air Bells</title>
+	<style>
+	body {
+	  -webkit-user-select: none;
+	}
+	.measure{
+	  display: inline-block;
+	  position: relative;
+	  width:  200px;
+	  height: 20px;
+	  padding: 2px;
+	  border: 1px solid #333;
+	}
+	.inside{
+	  position: absolute;
+	  bottom:2px;
+	  height: 20px;
+	  left: 2px;
+	  background-color: #000;
+	}
+	</style>
+</head>
+<body>
+  <h1>Zen Air bell meditation</h1>
+  <input id="time" value="20"> minutes.<br>
+  <span id="countdown" type="duration"></span><br>
+  <button id="start">START</button>
+  
+  <script>
+
+  var audio_context, osc=[],start_time;
+  var current_tone=0, polyfony=16;
+  var chord=[[0,2,7,9],[0,5,7,11],[2,4,9,11],[0,2,5,7,9],[0,2,5,8]];
+  var current_chord=0,trans=0, last_chord_change=Date.now();
+  document.getElementById("start").addEventListener("click", start);
+  
+  function animate()
+  {
+    var minutes=Number(document.getElementById("time").value);
+    var seconds=minutes*60;
+    var dt=Date.now()-start_time;
+    var show_time=Math.floor(seconds-dt/1000);
+    var now=Date.now();
+    if(Math.random()<0.01 && (now-last_chord_change)>15000)
+    {
+      current_chord=Math.floor(Math.random()*chord.length);
+      trans=Math.floor(Math.random()*12);
+      console.log("chord change: "+trans,current_chord);
+      last_chord_change=now;
+    }
+    
+    if(Math.random()<0.025)
+    {
+      createTone(false);
+    }
+    document.getElementById("inside").style.width=(200-200*(dt/1000)/(seconds))+"px";
+    if(show_time>0)
+      window.requestAnimationFrame(animate);
+    else
+      createTone(true); // end tone
+      
+  }
+  function createTone(special)
+  {
+    var attack=10;
+    var decay=10000;
+    var notes=[];
+    for(var i=0;i<chord[current_chord].length;i++)
+    notes.push(chord[current_chord][i]+trans);
+    
+    var len=notes.length;
+    for(var i=0;i<len;i++) notes.push(notes[i]+12);
+    var len=notes.length;
+    for(var i=0;i<len;i++) notes.push(notes[i]+24);
+    var len=notes.length;
+    for(var i=0;i<len;i++) notes.push(notes[i]+24);
+
+
+    var n=Math.floor(Math.random()*notes.length);
+    var freq=55*Math.pow(2,notes[n]/12)+Math.random();
+    if(Math.random()*1500<freq && special==false) return;
+    
+    if(special)
+    {
+      var freq=55*Math.pow(2,5);
+      var decay=3000;
+          console.log("start/stop");
+    }else
+    {
+          console.log("freq: "+freq);
+    }
+    
+    // now set current oscillator.
+    current_tone=(current_tone+1)%osc.length;
+    osc[current_tone].o1.frequency.setValueAtTime(freq, audio_context.currentTime);
+
+    if(special)
+    {
+      var freq=55*Math.pow(2,5+5/12);
+    }
+    osc[current_tone].o2.frequency.setValueAtTime(freq+Math.random()*5, audio_context.currentTime);
+    
+    osc[current_tone].v1.gain.setValueAtTime(0, audio_context.currentTime);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(freq+100), audio_context.currentTime + attack / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(5/(freq+100), audio_context.currentTime + (attack + decay/2) / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime + (attack + decay) / 1000);
+
+    osc[current_tone].v2.gain.setValueAtTime(0, audio_context.currentTime);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(freq+100), audio_context.currentTime + attack / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(5/(freq+100), audio_context.currentTime + (attack + decay/3) / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + (attack + decay) / 1000);
+  
+    
+  }
+
+  function start()
+  {
+    start_time=Date.now();
+    try {
+      audio_context = new (window.AudioContext || window.webkitAudioContext);
+      for(var i=0;i<polyfony;i++)
+      {
+        var o2=audio_context.createOscillator();
+        var vol2=audio_context.createGain();
+        vol2.connect(audio_context.destination);
+        vol2.gain.setValueAtTime(0, audio_context.currentTime);
+
+        o2.connect(vol2);
+        var o1=audio_context.createOscillator();
+        var vol1=audio_context.createGain();
+        vol1.connect(audio_context.destination);
+        vol1.gain.setValueAtTime(0, audio_context.currentTime);
+        o1.connect(vol1);
+        o1.start(0);
+        o2.start(0);
+        osc.push({o1:o1,v1:vol1,o2:o2,v2:vol2});
+      }
+//        o.frequency.setValueAtTime(freq, audio_context.currentTime);
+//        vol.gain.setValueAtTime(0, audio_context.currentTime);
+//        vol.gain.linearRampToValueAtTime(15/(freq+100), audio_context.currentTime + attack / 1000);
+//        vol.gain.linearRampToValueAtTime(5/(freq+100), audio_context.currentTime + (attack + decay/2) / 1000);
+//        vol.gain.linearRampToValueAtTime(0, audio_context.currentTime + (attack + decay) / 1000);
+//        o.start(audio_context.currentTime);
+//        o.stop(audio_context.currentTime + attack+decay);
+      createTone(true); // start tone
+    } catch (e)
+    {
+      alert('No web audio oscillator support in this browser');
+    }
+    var str='<div class="measure"><div id="inside" class="inside"></div></div>';
+    document.getElementById("countdown").innerHTML=str;
+    animate();
+  }
+  </script>
+
+</body>
+</html>
