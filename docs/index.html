@@ -3,12 +3,24 @@
 
 <html>
 <head>
+	<meta charset="UTF-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width"/>
+    <meta name="description" content="Free endless zen-meditation bells">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="Hjalmar Snoep">
 	<title>Zen Air Bells</title>
 	<style>
+	html,body{
+	height: 100%;
+	}
 	body {
+		font-family: Garamond;
 	  -webkit-user-select: none;
+	  background-image: url("zen-air-bells.svg");
+	  background-size: cover;
+	  background-position: 50% 50%;
+	  text-align: center;
 	}
 	.measure{
 	  display: inline-block;
@@ -16,24 +28,173 @@
 	  width:  200px;
 	  height: 20px;
 	  padding: 2px;
-	  border: 1px solid #333;
+	  border: 1px solid rgba(128,120,115,0.5);
+	  background: rgba(255,255,255,0.5);
+	  border-radius: 20px;
+	}
+	button, input[type=button]{
+		 display: inline-block;
+        background-color: #fff;
+        border-radius: 10px;
+        border: 4px double #887776;
+        color: #887776;
+        text-align: center;
+		font-family: garamond;
+        font-size: 24px;
+        padding: 10px;
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -o-transition: all 0.5s;
+        transition: all 0.5s;
+        cursor: pointer;
+        margin: 5px;
+	}
+	h1{
+		color: #fff;
+		text-shadow: 2px 5px 5px #000;
+	}
+	input[type=number]
+	{
+	width: 65px;
+	font-size: 1.5em;
+	background: rgba(255,255,255,0.4);
 	}
 	.inside{
 	  position: absolute;
 	  bottom:2px;
 	  height: 20px;
 	  left: 2px;
-	  background-color: #000;
+	  background: rgba(192,180,170,0.5);
+	  border-radius: 15px;
 	}
+	.settings{
+		margin: auto;
+		color: #FFF;
+		text-shadow: 0px 0px 10px #000;
+		width: 500px;
+		background-color: rgba(0,0,0,0.2);
+	  border-radius: 20px;
+	}
+	.bar
+	{
+		background-color: rgba(255,255,255,0.7);
+		  border-radius: 20px;
+	}
+	.controls{
+			display: block;
+	}
+	
+	
+	input[type="range"] {
+  -webkit-appearance: none;
+  margin-right: 15px;
+  width: 200px;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  background-image: linear-gradient(#8d8577, #8d8577);
+  background-size: 27% 100%;
+  background-repeat: no-repeat;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #8d8577;
+  cursor: ew-resize;
+  box-shadow: 0 0 2px 0 #555;
+  transition: background .3s ease-in-out;
+}
+
+input[type=range]::-webkit-slider-runnable-track  {
+  -webkit-appearance: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
 	</style>
+    <script src="NoSleep.min.js"></script>
 </head>
 <body>
-  <h1>Zen Air bell meditation</h1>
-  <input id="time" value="20"> minutes.<br>
-  <span id="countdown" type="duration"></span><br>
+  <h1>Zen Air Bell Meditation</h1>
+  <input id="time" type="number" value="20"> minutes.<br><br>
+  <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
+  <br><br>
+	<div class="settings">
+	<div class="bar" id="bar"> OPTIONS </div>
+	<div class="controls" id="controls">
+
+	<br>
+	
+<!--	Tuning: <select id="tuning">
+		<option>Complete</option>
+		<option>Pure</option>
+		<option>Progressive</option>
+	</select><BR><br>
+	
+	Nr of musicians: <input type="range" min="1" max="42" step="1" value="12" oninput="rangevalue.value=value"> <output id="rangevalue">12</output>
+	-->
+	<br>
+	<br>
+	
+    <input type="button" id="toggle" value="Wake Lock is disabled" /><br>
+	</div>
+	</div>
+	</div>
+
+
   
   <script>
+// Styling of the range input.
+
+const rangeInputs = document.querySelectorAll('input[type="range"]')
+const numberInput = document.querySelector('input[type="number"]')
+
+function handleInputChange(e) {
+  let target = e.target
+  if (e.target.type !== 'range') {
+    target = document.getElementById('range')
+  } 
+  const min = target.min
+  const max = target.max
+  const val = target.value
+  
+  target.style.backgroundSize = (val - min) * 100 / (max - min) + '% 100%'
+}
+
+rangeInputs.forEach(input => {
+  input.addEventListener('input', handleInputChange)
+})
+
+numberInput.addEventListener('input', handleInputChange)
+</script>
+<script>
+var bar = document.getElementById("bar");
+var controls=document.getElementById("controls");
+// close the controls to start
+controls.style.display = "none";
+
+bar.onclick = function()
+{
+	var controls=document.getElementById("controls");
+	console.log("click"+controls);
+    if(controls.style.display === "none")
+    {
+        controls.style.display = "";
+		bar.style.borderRadius="25px 25px 0 0 ";
+    }
+    else
+    {
+        controls.style.display = "none";
+		bar.style.borderRadius="25px";
+    }
+}
+</script>
+<script>
+// this is where the zen-air-bells start :)
 
   var audio_context, osc=[],start_time;
   var current_tone=0, polyfony=16;
@@ -159,6 +320,25 @@
     animate();
   }
   </script>
+    <script>
+// No sleep, https://github.com/richtr/NoSleep.js
+      var noSleep = new NoSleep();
+
+      var wakeLockEnabled = false;
+      var toggleEl = document.querySelector("#toggle");
+      toggleEl.addEventListener('click', function() {
+        if (!wakeLockEnabled) {
+          noSleep.enable(); // keep the screen on!
+          wakeLockEnabled = true;
+          toggleEl.value = "Wake Lock is enabled";
+        } else {
+          noSleep.disable(); // let the screen turn off.
+          wakeLockEnabled = false;
+          toggleEl.value = "Wake Lock is disabled";
+        }
+      }, false);
+    </script>
+    </script>
 
 </body>
 </html>
