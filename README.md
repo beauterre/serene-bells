@@ -29,4 +29,4 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
 ## APPRECIATION:
 I do these things because I find them useful, I share, because you might.
 If you do, you can show that by donating money, effort, time or a kind word and I will appreciate it very much.
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](paypal@snoep.at)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=VLZXJ73VZ6PY4)
