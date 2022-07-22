@@ -19,6 +19,7 @@
 	  -webkit-user-select: none;
 	  text-align: center;
 	  background-color: #ccc9c0;
+	  background-image: url("back.png");
 	}
 	.measure{
 	  display: inline-block;
@@ -133,13 +134,19 @@ input[type=range]::-webkit-slider-runnable-track  {
 
 	<br>
 	
-<!--	Tuning: <select id="tuning">
+	Playing style: <select id="tuning">
 		<option>Complete</option>
 		<option>Pure</option>
-		<option>Progressive</option>
+		<option>Serene</option>
+		<option>Mushin</option>
+		<option>Peaceful</option>
+		<option>Calm</option>
+		<option>Nirvana</option>
+		<option>Koan</option>
+		<option>Wuwei</option>
 	</select><BR><br>
 	
-	Nr of musicians: <input type="range" min="1" max="42" step="1" value="12" oninput="rangevalue.value=value"> <output id="rangevalue">12</output>
+<!--	Nr of musicians: <input id="pause" type="range" min="1" max="42" step="1" value="12" oninput="pausevalue.value=value"> <output id="pausevalue">12</output>
 	-->
 	<br>
 	<br>
@@ -154,8 +161,10 @@ input[type=range]::-webkit-slider-runnable-track  {
   <script>
 // Styling of the range input.
 
-const rangeInputs = document.querySelectorAll('input[type="range"]')
-const numberInput = document.querySelector('input[type="number"]')
+if(0)
+{
+const rangeInput = document.getElementById('pause')
+const numberInput = document.getElementById('pausevalue')
 
 function handleInputChange(e) {
   let target = e.target
@@ -169,11 +178,9 @@ function handleInputChange(e) {
   target.style.backgroundSize = (val - min) * 100 / (max - min) + '% 100%'
 }
 
-rangeInputs.forEach(input => {
-  input.addEventListener('input', handleInputChange)
-})
-
-numberInput.addEventListener('input', handleInputChange)
+rangeInput.addEventListener('input', handleInputChange);
+numberInput.addEventListener('input', handleInputChange);
+}
 </script>
 <script>
 var bar = document.getElementById("bar");
@@ -205,32 +212,177 @@ bar.onclick = function()
   var chord=[[0,2,7,9],[0,5,7,11],[2,4,9,11],[0,2,5,7,9],[0,2,5,8]];
   var current_chord=0,trans=0, last_chord_change=Date.now();
   document.getElementById("start").addEventListener("click", start);
+  var last_note=0;
   
   function animate()
   {
+  
+	var tuning=document.getElementById("tuning").options[document.getElementById("tuning").selectedIndex].text;
     var minutes=Number(document.getElementById("time").value);
     var seconds=minutes*60;
     var dt=Date.now()-start_time;
     var show_time=Math.floor(seconds-dt/1000);
     var now=Date.now();
-    if(Math.random()<0.01 && (now-last_chord_change)>15000)
-    {
-      current_chord=Math.floor(Math.random()*chord.length);
-      trans=Math.floor(Math.random()*12);
-      console.log("chord change: "+trans,current_chord);
-      last_chord_change=now;
+		switch(tuning.toLowerCase())
+		{
+			case "complete":
+			    if(Math.random()<0.01 && (now-last_chord_change)>15000)
+				{
+					current_chord=Math.floor(Math.random()*chord.length);
+					trans=Math.floor(Math.random()*12);
+					last_chord_change=now;
+				}
+			    if(Math.random()<0.025)
+				{
+					createTone(false);
+				}
+			break;
+			case "pure":
+				current_chord=0;
+				trans=0;
+			    if(Math.random()<0.5 && (now-last_chord_change)>2300)
+				{
+					for(var i=0;i<3;i++)
+					{
+						createTone(false);
+					}
+					last_chord_change=now;
+				}
+			break;
+			case "serene":
+				// never change the chord, but transposition only in fifths and fourths.
+			    if(Math.random()<0.01 && (now-last_chord_change)>1000)
+				{
+					// never change the chord!
+					current_chord=0;
+					if(Math.random()<0.5)
+					{
+						if(Math.random()<0.5)
+						{
+							trans=5;
+						}else{
+							trans=7;
+						}
+					}else{
+							trans=0;
+					}
+					last_chord_change=now;
+				}
+				if(Math.random()<0.025) createTone(false);
+			break;
+			case "mushin":
+			    if((now-last_chord_change)>500)
+				{
+					// ALWAYS change the chord and the trans..!
+					current_chord=Math.floor(Math.random()*chord.length);
+					for(var i=0;i<3;i++)
+					{
+						trans=Math.floor(Math.random()*155)*2;
+						last_chord_change=now;
+						createTone(false);
+					}
+				}
+			break;
+			case "peaceful":
+				// never change the chord, but transposition only in fifths and fourths.
+			    if(Math.random()<0.01 && (now-last_chord_change)>1000)
+				{
+					// never change the chord!
+					current_chord=1;
+					if(Math.random()<0.5)
+					{
+						if(Math.random()<0.5)
+						{
+							trans=5;
+						}else{
+							trans=7;
+						}
+					}else{
+							trans=0;
+					}
+					last_chord_change=now;
+				}
+				if(Math.random()<0.025) createTone(false);
+			break;
+			case "calm":
+// never change the chord, but transposition only in fifths and fourths.
+			    if(Math.random()<0.01 && (now-last_chord_change)>1000)
+				{
+					// never change the chord!
+					current_chord=2;
+					if(Math.random()<0.5)
+					{
+						if(Math.random()<0.5)
+						{
+							trans=5;
+						}else{
+							trans=7;
+						}
+					}else{
+							trans=0;
+					}
+					last_chord_change=now;
+				}
+				if(Math.random()<0.005) createTone(false);			break;
+			case "nirvana":
+			    if(Math.random()<0.01 && (now-last_chord_change)>5000)
+				{
+					current_chord=Math.floor(Math.random()*chord.length);
+					if(Math.random()<0.2)
+					{
+						trans=Math.floor(Math.random()*12);
+					}
+					last_chord_change=now;
+				}
+			    if(Math.random()<0.025)
+				{
+					createTone(false);
+				}
+			case "koan":
+// never change the chord, but transposition only in fifths and fourths.
+			    if(Math.random()<0.01 && (now-last_chord_change)>1000)
+				{
+					// never change the chord!
+					current_chord=4;
+					trans=0;
+					last_chord_change=now;
+				}
+				if(Math.random()<0.013) createTone(false);			break;
+			case "wuwei":
+// never change the chord, but transposition only in fifths and fourths.
+			    if(Math.random()<0.01 && (now-last_chord_change)>6000)
+				{
+					// never change the chord!
+					current_chord=4;
+					if(Math.random()<0.5)
+					{
+						if(Math.random()<0.5)
+						{
+							trans=5;
+						}else{
+							trans=7;
+						}
+					}else{
+							trans=0;
+					}
+					last_chord_change=now;
+				}
+				if(Math.random()<0.009) createTone(false);			break;
     }
     
-    if(Math.random()<0.025)
-    {
-      createTone(false);
-    }
+
     document.getElementById("inside").style.width=(200-200*(dt/1000)/(seconds))+"px";
     if(show_time>0)
       window.requestAnimationFrame(animate);
     else
-      createTone(true); // end tone
+	{
+		setTimeout(endTone,2500);
+	}
       
+  }
+  function endTone()
+  {
+       createTone(true); // end tone
   }
   function createTone(special)
   {
@@ -247,15 +399,36 @@ bar.onclick = function()
     var len=notes.length;
     for(var i=0;i<len;i++) notes.push(notes[i]+24);
 
+	var tuning=document.getElementById("tuning").options[document.getElementById("tuning").selectedIndex].text;
 
     var n=Math.floor(Math.random()*notes.length);
-    var freq=55*Math.pow(2,notes[n]/12)+Math.random();
+
+	if(tuning=="Nirvana")
+	{
+		n=last_note+1;
+		if(n>=notes.length) n=n%notes.length;
+		console.log(n+"/"+notes.length);
+	}
+	if(tuning=="Wuwei")
+	{
+		if(Math.random()<0.25)
+		{
+			n=Math.floor(last_note+4*Math.random());
+		}else{
+			n=Math.floor(last_note-2*Math.random());
+		}
+		if(n<0) n=notes.length+n;
+		if(n>=notes.length) n=n%notes.length;
+		console.log(n+"/"+notes.length);
+	}
+	last_note=n;
+    var freq=55*Math.pow(2,notes[n]/12)+Math.random(); //max 1 hz out of tune in total.
     if(Math.random()*1500<freq && special==false) return;
     
     if(special)
     {
-      var freq=55*Math.pow(2,5);
-      var decay=3000;
+      freq=55*Math.pow(2,7);
+      var decay=4000;
           console.log("start/stop");
     }else
     {
@@ -268,18 +441,21 @@ bar.onclick = function()
 
     if(special)
     {
-      var freq=55*Math.pow(2,5+5/12);
+      freq=55*Math.pow(2,5+5/12);
     }
-    osc[current_tone].o2.frequency.setValueAtTime(freq+Math.random()*5, audio_context.currentTime);
+	
+	var voldim=freq;
+//	if(voldim>400) voldim=400;
+    osc[current_tone].o2.frequency.setValueAtTime(freq+Math.random()*5, audio_context.currentTime);// max 5 hz detune of second wave..
     
     osc[current_tone].v1.gain.setValueAtTime(0, audio_context.currentTime);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(freq+100), audio_context.currentTime + attack / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(5/(freq+100), audio_context.currentTime + (attack + decay/2) / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime + attack / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(5/(voldim+100), audio_context.currentTime + (attack + decay/2) / 1000);
     osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime + (attack + decay) / 1000);
 
     osc[current_tone].v2.gain.setValueAtTime(0, audio_context.currentTime);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(freq+100), audio_context.currentTime + attack / 1000);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(5/(freq+100), audio_context.currentTime + (attack + decay/3) / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime + attack / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(5/(voldim+100), audio_context.currentTime + (attack + decay/3) / 1000);
     osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + (attack + decay) / 1000);
   
     
@@ -321,7 +497,7 @@ bar.onclick = function()
     }
     var str='<div class="measure"><div id="inside" class="inside"></div></div>';
     document.getElementById("countdown").innerHTML=str;
-    animate();
+	window.setTimeout(animate,5000);
   }
   </script>
     <script>
