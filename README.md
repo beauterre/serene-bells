@@ -4,7 +4,7 @@
 ## zen-air-bells can be found here:
 - [LISTEN TO ZEN-AIR-BELLS](https://hjalmarsnoep.github.io/zen-air-bells/)
 
-[Auhm experiment](https://hjalmarsnoep.github.io/zen-air-bells/endless-auhm.html)
+[Auhm experiment](https://robveter.github.io/zen-air-bells/endless-auhm.html)
 
 # use
 This is created to be a background for meditation, 
