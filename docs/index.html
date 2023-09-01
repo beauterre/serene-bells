@@ -209,7 +209,7 @@ bar.onclick = function()
 // this is where the zen-air-bells start :)
 
   var audio_context, osc=[],start_time;
-  var current_tone=0, polyfony=16;
+  var current_tone=0, polyfony=24;
   var chord=[[0,2,7,9],[0,5,7,11],[2,4,9,11],[0,2,5,7,9],[0,2,5,8]];
   var current_chord=0,trans=0, last_chord_change=Date.now();
 
@@ -389,8 +389,9 @@ bar.onclick = function()
   }
   function createTone(special)
   {
-    var attack=10;
-    var decay=10000;
+	var reactiontime=10/1000;
+    var attack=50;
+    var decay=20000;
     var notes=[];
     for(var i=0;i<chord[current_chord].length;i++)
     notes.push(chord[current_chord][i]+trans);
@@ -447,19 +448,20 @@ bar.onclick = function()
       freq=55*Math.pow(2,5+5/12);
     }
 	
-	var voldim=freq;
+	var voldim=freq-80;
 //	if(voldim>400) voldim=400;
-    osc[current_tone].o2.frequency.setValueAtTime(freq+Math.random()*5, audio_context.currentTime);// max 5 hz detune of second wave..
+    osc[current_tone].o2.frequency.setValueAtTime(freq+Math.random()*5, audio_context.currentTime+reactiontime);// max 5 hz detune of second wave..
     
-    osc[current_tone].v1.gain.setValueAtTime(0, audio_context.currentTime);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime + attack / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(5/(voldim+100), audio_context.currentTime + (attack + decay/2) / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime + (attack + decay) / 1000);
+    osc[current_tone].v1.gain.setValueAtTime(0, audio_context.currentTime+reactiontime);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime+ attack / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(6/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/4) / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(4/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/3) / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime + (attack + decay) / 1000);
 
-    osc[current_tone].v2.gain.setValueAtTime(0, audio_context.currentTime);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime + attack / 1000);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(5/(voldim+100), audio_context.currentTime + (attack + decay/3) / 1000);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + (attack + decay) / 1000);
+    osc[current_tone].v2.gain.setValueAtTime(0, audio_context.currentTime+reactiontime);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime + attack / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/4) / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime + (attack  + decay) / 1000);
   
     
   }
