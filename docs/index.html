@@ -58,9 +58,9 @@
 
 	}
 	small{
-		color: #fff;
-		text-shadow: 1px 2px 3px #000;
 		display: block;
+		margin-top:-15px;
+		margin-bottom: 25px;
 
 	}
 	input[type=number]
@@ -397,7 +397,7 @@ bar.onclick = function()
   function createTone(special)
   {
 	var reactiontime=0.25;// 0.25 seems to be de rigeur..
-    var attack=25;
+    var attack=10;
     var decay=20000;
     var notes=[];
     for(var i=0;i<chord[current_chord].length;i++)
@@ -476,12 +476,14 @@ bar.onclick = function()
 	  // fix it so that end of ramp is at end of wave, for ultrasmooth sound..
     var duration = (attack + decay) / 1000;
     var fixedDuration = Math.round(duration * freq) / freq;
+    fixedDuration=duration;// does this make a problemsomehow??might need a complete rollback..
     osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime*2 + fixedDuration);
 
     osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime*2 + attack / 1000);
     osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
     duration = (attack + decay) / 1000;
     fixedDuration = Math.round(duration * freq_calc) / freq_calc;
+    fixedDuration=duration;// does this make a problemsomehow??might need a complete rollback..
 
     osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime*2 +fixedDuration);
   
