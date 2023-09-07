@@ -441,8 +441,14 @@ bar.onclick = function()
     }
     
     // now set current oscillator.
+    //make the oscillator quiet..
+    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
+
+
+	  
     current_tone=(current_tone+1)%osc.length;
-    osc[current_tone].o1.frequency.setValueAtTime(freq, audio_context.currentTime+reactiontime);
+    osc[current_tone].o1.frequency.setValueAtTime(freq, audio_context.currentTime+reactiontime+0.1); //setwhen quiet
 
     if(special)
     {
@@ -450,21 +456,26 @@ bar.onclick = function()
     }
 	
 	var voldim=freq-80;
+	  if(voldim<0) voldim=0;
 //	if(voldim>400) voldim=400;
 	  var freq_calc=freq+Math.random()*5
-    osc[current_tone].o2.frequency.setValueAtTime(freq_calc, audio_context.currentTime+reactiontime);// max 5 hz detune of second wave..
+    osc[current_tone].o2.frequency.setValueAtTime(freq_calc, audio_context.currentTime+reactiontime+0.1); //setwhen quiet max 5 hz detune of second wave..
     
-    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
 
-    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime+ attack / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(6/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/4) / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(4/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/3) / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime + (attack + decay) / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime*2+ attack / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(6/(voldim+100), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(4/(voldim+100), audio_context.currentTime+reactiontime*2 + (attack + decay/3) / 1000);
+	  // fix it so that end of ramp is at end of wave, for ultrasmooth sound..
+    var duration = (attack + decay) / 1000;
+    var fixedDuration = Math.round(duration * freq) / freq;
+    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime*2 + fixedDuration);
 
-    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime + attack / 1000);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/4) / 1000);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime + (attack  + decay) / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime*2 + attack / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000;);
+    duration = (attack + decay) / 1000;
+    fixedDuration = Math.round(duration * freq_calc) / freq_calc;
+
+    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime*2 +fixedDuration);
   
     
   }
