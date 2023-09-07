@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>Serene Bells</h1>
-  <div class="version">v23.9.7.5.55</div>
+  <div class="version">v23.9.7.5.45</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -476,6 +476,7 @@ bar.onclick = function()
     var duration= (attack + decay) / 1000
     var fixedDuration = Math.round(duration * (freq1*2)) / (freq1*2);
     osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime*2 + fixedDuration);
+    osc[current_tone].o1.stop(audio_context.currentTime+reactiontime*2 + fixedDuration);
 
     osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime*2 + attack / 1000);
     osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
@@ -483,7 +484,7 @@ bar.onclick = function()
     fixedDuration = Math.round(duration * (freq2*2)) / (freq2*2);
     
     osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime*2 +fixedDuration);
-    osc[current_tone].o2.stop();
+    osc[current_tone].o2.stop(audio_context.currentTime + reactiontime*2 +fixedDuration);
   
     
   }
