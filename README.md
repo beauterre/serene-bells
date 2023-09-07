@@ -39,7 +39,12 @@ or
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
 ### keeping your device awake
 I owe a debt of gratitude to [no_sleep.js by Richtr](https://github.com/richtr/NoSleep.js/)
-I would have NEVER figured that out..
+I would have NEVER figured that out.. 
+
+## anticlick
+there are problems with oscillator clicks in somebrowsers, despite the gainramp..
+https://stackoverflow.com/questions/32948961/webaudio-oscillator-click
+(https://codepen.io/yukulele/pen/QWMZGOZ)
 
 ## APPRECIATION:
 I do these things because I find them useful, I share, because you might.
