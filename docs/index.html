@@ -60,6 +60,7 @@
 	small{
 		color: #fff;
 		text-shadow: 1px 2px 3px #000;
+		display: block;
 
 	}
 	input[type=number]
@@ -129,7 +130,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>Serene Bells</h1>
-  <small>v23.9.7.4.39</small>
+  <small>v23.9.7.4.49</small>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -453,18 +454,19 @@ bar.onclick = function()
 
 
 	  
-    current_tone=(current_tone+1)%osc.length;
-    osc[current_tone].o1.frequency.setValueAtTime(freq, audio_context.currentTime+reactiontime+0.1); //setwhen quiet
-
     if(special)
     {
       freq=55*Math.pow(2,5+5/12);
     }
+    current_tone=(current_tone+1)%osc.length;
+	 freq=Math.round(freq); 
+    osc[current_tone].o1.frequency.setValueAtTime(freq, audio_context.currentTime+reactiontime+0.1); //set when quiet
+
 	
 	var voldim=freq-80;
 	  if(voldim<0) voldim=0;
 //	if(voldim>400) voldim=400;
-	  var freq_calc=freq+Math.random()*5
+	  var freq_calc=Math.round(freq+Math.random()*5);
     osc[current_tone].o2.frequency.setValueAtTime(freq_calc, audio_context.currentTime+reactiontime+0.1); //setwhen quiet max 5 hz detune of second wave..
     
 
