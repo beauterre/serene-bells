@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>Serene Bells</h1>
-  <div class="version">v23.9.7.5.15</div>
+  <div class="version">v23.9.7.5.25</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -445,27 +445,40 @@ bar.onclick = function()
     
     // now set current oscillator.
     current_tone=(current_tone+1)%osc.length;
-    osc[current_tone].o1.frequency.setValueAtTime(freq, audio_context.currentTime);
 
     if(special)
     {
       freq=55*Math.pow(2,5+5/12);
     }
-	
-	var voldim=freq-80;
-//	if(voldim>400) voldim=400;
-    osc[current_tone].o2.frequency.setValueAtTime(freq+Math.random()*5, audio_context.currentTime+reactiontime);// max 5 hz detune of second wave..
-    
+
+    // quiet
     osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
+	
+	  // new freqs
+    var freq1=Math.round(freq);
+    var freq2=Math.round(freq+Math.random()*5);
+    osc[current_tone].o1.frequency.linearRampToValueAtTime(freq, audio_context.currentTime);
+    osc[current_tone].o2.frequency.linearRampToValueAtTime(freq2, audio_context.currentTime+reactiontime);// max 5 hz detune of second wave..
+    
+  	var voldim=freq-80;
+    //	if(voldim>400) voldim=400;
+  	if(voldim<0) voldim=0;
+
+    // set envelope
     osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime+ attack / 1000);
     osc[current_tone].v1.gain.linearRampToValueAtTime(6/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/4) / 1000);
     osc[current_tone].v1.gain.linearRampToValueAtTime(4/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/3) / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime + (attack + decay) / 1000);
+    var duration= (attack + decay) / 1000
+    var fixedDuration = Math.round(duration * (freq1*2)) / (freq1*2);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime + fixedDuration);
 
-    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
     osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime + attack / 1000);
     osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/4) / 1000);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime + (attack  + decay) / 1000);
+    
+    fixedDuration = Math.round(duration * (freq2*2)) / (freq2*2);
+    
+    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime +fixedDuration);
   
     
   }
