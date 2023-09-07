@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>Serene Bells</h1>
-  <div class="version">v23.9.7.5.59</div>
+  <div class="version">v23.9.7.6.06</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -213,7 +213,7 @@ bar.onclick = function()
 // this is where the zen-air-bells start :)
 
   var audio_context, osc=[],start_time;
-  var current_tone=0, polyfony=10;
+  var current_tone=0, polyfony=24;
   var chord=[[0,2,7,9],[0,5,7,11],[2,4,9,11],[0,2,5,7,9],[0,2,5,8]];
   var current_chord=0,trans=0, last_chord_change=Date.now();
 
@@ -394,8 +394,8 @@ bar.onclick = function()
   function createTone(special)
   {
 	  var reactiontime=25/1000;// works better on some browsers
-    var attack=10; //ms
-    var decay=20000; //ms
+    var attack=10;
+    var decay=20000;
     var notes=[];
     for(var i=0;i<chord[current_chord].length;i++)
     notes.push(chord[current_chord][i]+trans);
@@ -444,7 +444,7 @@ bar.onclick = function()
     }
     
     // now set current oscillator.
-    current_tone=(current_tone+1)%polyfony;
+    current_tone=(current_tone+1)%osc.length;
 
     if(special)
     {
@@ -460,28 +460,27 @@ bar.onclick = function()
     var freq2=Math.round(freq+Math.random()*5);
     osc[current_tone].o1.frequency.linearRampToValueAtTime(freq, audio_context.currentTime+reactiontime*1.5);
     osc[current_tone].o2.frequency.linearRampToValueAtTime(freq2, audio_context.currentTime+reactiontime*1.5);// max 5 hz detune of second wave..
-
+    
   	var voldim=freq-80;
     //	if(voldim>400) voldim=400;
   	if(voldim<0) voldim=0;
   	
-    //	max volume=0.15, no distortion.., but 24 polyphone, so might distort, go down in volume to 0.075
+    //	max volume=0.15, no distortion
 
     // set envelope
-    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+15*polyfony), audio_context.currentTime+reactiontime*2+ attack / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(6/(voldim+15*polyfony), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(4/(voldim+15*polyfony), audio_context.currentTime+reactiontime*2 + (attack + decay/3) / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+7*polyfony), audio_context.currentTime+reactiontime*2+ attack / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(6/(voldim+7*polyfony), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(4/(voldim+7*polyfony), audio_context.currentTime+reactiontime*2 + (attack + decay/3) / 1000);
     var duration= (attack + decay) / 1000
     var fixedDuration = Math.round(duration * (freq1*2)) / (freq1*2);
     osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime*2 + fixedDuration);
 
-    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+15*polyfony), audio_context.currentTime+reactiontime*2 + attack / 1000);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+15*polyfony), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+7*polyfony), audio_context.currentTime+reactiontime*2 + attack / 1000);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+7*polyfony), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
     
     fixedDuration = Math.round(duration * (freq2*2)) / (freq2*2);
     
     osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime*2 +fixedDuration);
-    osc[current_tone].o2.stop();
   
     
   }
