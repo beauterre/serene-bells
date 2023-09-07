@@ -57,6 +57,11 @@
 		text-shadow: 1px 2px 5px #000;
 
 	}
+	small{
+		color: #fff;
+		text-shadow: 1px 2px 3px #000;
+
+	}
 	input[type=number]
 	{
 	width: 65px;
@@ -123,7 +128,8 @@ input[type=range]::-webkit-slider-runnable-track  {
     <script src="NoSleep.min.js"></script>
 </head>
 <body>
-  <h1>Serene Bells</h1><small>v23.9.7.4.37</small>
+  <h1>Serene Bells</h1>
+  <small>v23.9.7.4.39</small>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -471,7 +477,7 @@ bar.onclick = function()
     osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime*2 + fixedDuration);
 
     osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime*2 + attack / 1000);
-    osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000;);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
     duration = (attack + decay) / 1000;
     fixedDuration = Math.round(duration * freq_calc) / freq_calc;
 
