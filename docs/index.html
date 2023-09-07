@@ -57,12 +57,6 @@
 		text-shadow: 1px 2px 5px #000;
 
 	}
-	small{
-		display: block;
-		margin-top:-15px;
-		margin-bottom: 25px;
-
-	}
 	input[type=number]
 	{
 	width: 65px;
@@ -130,7 +124,6 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>Serene Bells</h1>
-  <small>v23.9.7.5.05</small>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -394,10 +387,10 @@ bar.onclick = function()
   {
 	document.getElementById("endsound").play();
   }
-    function createTone(special)
+  function createTone(special)
   {
-	var reactiontime=0.25;// 0.25 seems to be de rigeur..
-    var attack=25;
+	var reactiontime=10/1000;
+    var attack=50;
     var decay=20000;
     var notes=[];
     for(var i=0;i<chord[current_chord].length;i++)
@@ -408,10 +401,9 @@ bar.onclick = function()
     var len=notes.length;
     for(var i=0;i<len;i++) notes.push(notes[i]+24);
     var len=notes.length;
-    for(var i=0;i<len;i++) notes.push(notes[i]+24); // shouldn´t that be +36, next octave??
-	  //possible notes to choose from..
+    for(var i=0;i<len;i++) notes.push(notes[i]+24);
 
-  var tuning=document.getElementById("tuning").options[document.getElementById("tuning").selectedIndex].text;
+	var tuning=document.getElementById("tuning").options[document.getElementById("tuning").selectedIndex].text;
 
     var n=Math.floor(Math.random()*notes.length);
 
@@ -439,8 +431,8 @@ bar.onclick = function()
     
     if(special)
     {
-      	freq=55*Math.pow(2,7);
-      	var decay=4000;
+      freq=55*Math.pow(2,7);
+      var decay=4000;
           console.log("start/stop");
     }else
     {
@@ -449,7 +441,7 @@ bar.onclick = function()
     
     // now set current oscillator.
     current_tone=(current_tone+1)%osc.length;
-    osc[current_tone].o1.frequency.setValueAtTime(freq, audio_context.currentTime+reactiontime);
+    osc[current_tone].o1.frequency.setValueAtTime(freq, audio_context.currentTime);
 
     if(special)
     {
@@ -458,17 +450,15 @@ bar.onclick = function()
 	
 	var voldim=freq-80;
 //	if(voldim>400) voldim=400;
-	  var freq_calc=freq+Math.random()*5
-    osc[current_tone].o2.frequency.setValueAtTime(freq_calc, audio_context.currentTime+reactiontime);// max 5 hz detune of second wave..
+    osc[current_tone].o2.frequency.setValueAtTime(freq+Math.random()*5, audio_context.currentTime+reactiontime);// max 5 hz detune of second wave..
     
-    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
-
+    osc[current_tone].v1.gain.setValueAtTime(0, audio_context.currentTime+reactiontime);
     osc[current_tone].v1.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime+ attack / 1000);
     osc[current_tone].v1.gain.linearRampToValueAtTime(6/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/4) / 1000);
     osc[current_tone].v1.gain.linearRampToValueAtTime(4/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/3) / 1000);
     osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime + (attack + decay) / 1000);
 
-    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
+    osc[current_tone].v2.gain.setValueAtTime(0, audio_context.currentTime+reactiontime);
     osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+100), audio_context.currentTime+reactiontime + attack / 1000);
     osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+100), audio_context.currentTime+reactiontime + (attack + decay/4) / 1000);
     osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime + (attack  + decay) / 1000);
@@ -489,17 +479,16 @@ bar.onclick = function()
         var o2=audio_context.createOscillator();
         var vol2=audio_context.createGain();
         vol2.connect(audio_context.destination);
-        vol2.gain.setValueAtTime(0, audio_context.currentTime+0.25);
+        vol2.gain.setValueAtTime(0, audio_context.currentTime);
 
         o2.connect(vol2);
         var o1=audio_context.createOscillator();
         var vol1=audio_context.createGain();
         vol1.connect(audio_context.destination);
-        vol1.gain.setValueAtTime(0, audio_context.currentTime+0.25);
+        vol1.gain.setValueAtTime(0, audio_context.currentTime);
         o1.connect(vol1);
-        o1.start(audio_context.currentTime+0.25);// wait until gain set???
-        o2.start(audio_context.currentTime+0.25);//it´s just always on, that might be the problem??
-	      // now do the fixed end time trick
+        o1.start(0);
+        o2.start(0);
         osc.push({o1:o1,v1:vol1,o2:o2,v2:vol2});
       }
 //        o.frequency.setValueAtTime(freq, audio_context.currentTime);
