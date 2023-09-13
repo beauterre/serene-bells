@@ -9,7 +9,7 @@
     <meta name="description" content="Free endless serene-bells">
     <meta name="keywords" content="HTML, CSS, JavaScript">
     <meta name="author" content="Belle Beauterre">
-	<title>Serene Bells</title>
+	<title>serene Bells</title>
 	<style>
 	html,body{
 	height: 100%;
@@ -126,8 +126,8 @@ input[type=range]::-webkit-slider-runnable-track  {
     <script src="NoSleep.min.js"></script>
 </head>
 <body>
-  <h1>Serene Bells</h1>
-  <div class="version">v23.9.7.6.06</div>
+  <h1>serene Bells</h1>
+  <div class="version">v23.9.13.10.51</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -139,15 +139,16 @@ input[type=range]::-webkit-slider-runnable-track  {
 	<br>
 	
 	Playing style: <select id="tuning">
-		<option>Complete</option>
-		<option>Pure</option>
-		<option>Serene</option>
-		<option>Mushin</option>
-		<option>Peaceful</option>
-		<option>Calm</option>
-		<option>Nirvana</option>
-		<option>Koan</option>
-		<option>Wuwei</option>
+		<option>charging</option>
+		<option>complete</option>
+		<option>pure</option>
+		<option>serene</option>
+		<option>tranquil</option>
+		<option>peaceful</option>
+		<option>calm</option>
+		<option>windless</option>
+		<option>clear</option>
+		<option>gentle</option>
 	</select><BR><br>
 	
 <!--	Nr of musicians: <input id="pause" type="range" min="1" max="42" step="1" value="12" oninput="pausevalue.value=value"> <output id="pausevalue">12</output>
@@ -232,6 +233,12 @@ bar.onclick = function()
     var now=Date.now();
 		switch(tuning.toLowerCase())
 		{
+			case "tranquil":
+		    if(Math.random()<0.005)
+				{
+					createTone(false);
+				}
+			break;
 			case "complete":
 			    if(Math.random()<0.01 && (now-last_chord_change)>15000)
 				{
@@ -277,14 +284,14 @@ bar.onclick = function()
 				}
 				if(Math.random()<0.025) createTone(false);
 			break;
-			case "mushin":
+			case "tranquil":
 			    if((now-last_chord_change)>500)
 				{
 					// ALWAYS change the chord and the trans..!
 					current_chord=Math.floor(Math.random()*chord.length);
 					for(var i=0;i<3;i++)
 					{
-						trans=Math.floor(Math.random()*155)*2;
+						trans=Math.floor(Math.random()*12);
 						last_chord_change=now;
 						createTone(false);
 					}
@@ -331,7 +338,56 @@ bar.onclick = function()
 					last_chord_change=now;
 				}
 				if(Math.random()<0.005) createTone(false);			break;
-			case "nirvana":
+			case "charging":
+			  switch(eventcounter)
+			  {
+			    case 0:
+			      //we just started, do a gong at one second..
+			      if(dt>5000)
+			      {
+			        eventcounter=1;
+		      console.log("eventcounter: "+eventcounter+" "+dt);
+			       createTone(false);
+			      }
+			     break;
+			    case 1:
+			      //we just started, do a gong at one second..
+			      if(dt>8000)
+			      {
+			        eventcounter=2;
+		      console.log("eventcounter: "+eventcounter+" "+dt);
+			       createTone(false);
+			      }
+			     break;
+			    case 2:
+			      //we just started, do a gong at one second..
+			      if(dt>13000)
+			      {
+			        eventcounter=3;
+		      console.log("eventcounter: "+eventcounter+" "+dt);
+			       createTone(false);
+			      }
+			     break;
+			    case 3:
+			      //we just started, do a gong at one second..
+			      if(dt>20000)
+			      {
+			        eventcounter++;
+		      console.log("eventcounter: "+eventcounter+" "+dt);
+			       createTone(false);
+			      }
+			     break;
+			    case 4:
+			      //we just started, do a gong at one second..
+			      if(dt%120000<50)
+			      {
+    		      console.log("eventcounter: "+eventcounter+" "+dt);
+			       createTone(false);
+			      }
+			     break;
+			  }
+	      break;
+			case "windless":
 			    if(Math.random()<0.01 && (now-last_chord_change)>5000)
 				{
 					current_chord=Math.floor(Math.random()*chord.length);
@@ -345,7 +401,7 @@ bar.onclick = function()
 				{
 					createTone(false);
 				}
-			case "koan":
+			case "clear":
 // never change the chord, but transposition only in fifths and fourths.
 			    if(Math.random()<0.01 && (now-last_chord_change)>1000)
 				{
@@ -355,7 +411,7 @@ bar.onclick = function()
 					last_chord_change=now;
 				}
 				if(Math.random()<0.013) createTone(false);			break;
-			case "wuwei":
+			case "gentle":
 // never change the chord, but transposition only in fifths and fourths.
 			    if(Math.random()<0.01 && (now-last_chord_change)>6000)
 				{
@@ -389,11 +445,11 @@ bar.onclick = function()
   }
   function endTone()
   {
-	document.getElementById("endsound").play();
+  	document.getElementById("endsound").play();
   }
   function createTone(special)
   {
-	  var reactiontime=25/1000;// works better on some browsers
+	  var reactiontime=5/1000;// works better on some browsers
     var attack=10;
     var decay=20000;
     var notes=[];
@@ -411,13 +467,13 @@ bar.onclick = function()
 
     var n=Math.floor(Math.random()*notes.length);
 
-	if(tuning=="Nirvana")
+	if(tuning=="windless")
 	{
 		n=last_note+1;
 		if(n>=notes.length) n=n%notes.length;
 		console.log(n+"/"+notes.length);
 	}
-	if(tuning=="Wuwei")
+	if(tuning=="gentle")
 	{
 		if(Math.random()<0.25)
 		{
@@ -429,14 +485,23 @@ bar.onclick = function()
 		if(n>=notes.length) n=n%notes.length;
 		console.log(n+"/"+notes.length);
 	}
-	last_note=n;
-    var freq=55*Math.pow(2,notes[n]/12)+Math.random(); //max 1 hz out of tune in total.
-    if(Math.random()*1500<freq && special==false) return;
+	if(tuning=="charging")
+	{
+			n=8;
+	}
+	if(tuning=="complete") last_note=n;
+	
+	
+	
+  var freq=55*Math.pow(2,notes[n]/12)+Math.random(); //max 1 hz out of tune in total.
+
+ // if(Math.random()*1500<freq && special==false) return; // these notes will not be played, but still generated..
     
     if(special)
     {
       freq=55*Math.pow(2,7);
       var decay=4000;
+
           console.log("start/stop");
     }else
     {
@@ -450,20 +515,40 @@ bar.onclick = function()
     {
       freq=55*Math.pow(2,5+5/12);
     }
+    if(tuning=="charging")
+  	{
+  	  if(eventcounter<4)
+  	  {
+  	    decay=2000+eventcounter*3000;
+  	    console.log("waking up the gong");
+  	  }else
+  	  {
+  	    decay=60000;
+  	  }
+  	}
 
     // quiet
-    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);// first to 0, then freq change
-    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(0.00001, audio_context.currentTime+reactiontime);// first to 0, then freq change
+    osc[current_tone].v2.gain.linearRampToValueAtTime(0.00001, audio_context.currentTime+reactiontime);
 	
 	  // new freqs
-    var freq1=Math.round(freq);
-    var freq2=Math.round(freq+Math.random()*5);
+    var freq1=freq;
+    var freq2=freq+Math.random()*5+1;
     osc[current_tone].o1.frequency.linearRampToValueAtTime(freq, audio_context.currentTime+reactiontime*1.5);
     osc[current_tone].o2.frequency.linearRampToValueAtTime(freq2, audio_context.currentTime+reactiontime*1.5);// max 5 hz detune of second wave..
     
   	var voldim=freq-80;
     //	if(voldim>400) voldim=400;
   	if(voldim<0) voldim=0;
+  	
+   if(tuning=="charging")
+  	{
+  	  if(eventcounter>3)
+  	  {
+  	    voldim=0.1;
+  	  }
+  	}
+
   	
     //	max volume=0.15, no distortion
 
@@ -473,18 +558,17 @@ bar.onclick = function()
     osc[current_tone].v1.gain.linearRampToValueAtTime(4/(voldim+7*polyfony), audio_context.currentTime+reactiontime*2 + (attack + decay/3) / 1000);
     var duration= (attack + decay) / 1000
     var fixedDuration = Math.round(duration * (freq1*2)) / (freq1*2);
-    osc[current_tone].v1.gain.linearRampToValueAtTime(0, audio_context.currentTime+reactiontime*2 + fixedDuration);
+    osc[current_tone].v1.gain.linearRampToValueAtTime(0.0001, audio_context.currentTime+reactiontime*2 + fixedDuration);
 
     osc[current_tone].v2.gain.linearRampToValueAtTime(15/(voldim+7*polyfony), audio_context.currentTime+reactiontime*2 + attack / 1000);
     osc[current_tone].v2.gain.linearRampToValueAtTime(2/(voldim+7*polyfony), audio_context.currentTime+reactiontime*2 + (attack + decay/4) / 1000);
     
     fixedDuration = Math.round(duration * (freq2*2)) / (freq2*2);
     
-    osc[current_tone].v2.gain.linearRampToValueAtTime(0, audio_context.currentTime + reactiontime*2 +fixedDuration);
+    osc[current_tone].v2.gain.linearRampToValueAtTime(0.0001, audio_context.currentTime + reactiontime*2 +fixedDuration);
   
     
   }
-
   function start()
   {
     start_time=Date.now();
@@ -525,8 +609,10 @@ bar.onclick = function()
     }
     var str='<div class="measure"><div id="inside" class="inside"></div></div>';
     document.getElementById("countdown").innerHTML=str;
-	window.setTimeout(animate,5000);
+	  window.setTimeout(animate,5000);
+	  eventcounter=0;
   }
+  var eventcounter=0;
   </script>
     <script>
 // No sleep, https://github.com/richtr/NoSleep.js
