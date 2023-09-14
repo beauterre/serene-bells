@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>serene Bells</h1>
-  <div class="version">v23.9.13.10.51</div>
+  <div class="version">v23.9.14.08.03</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -379,7 +379,7 @@ bar.onclick = function()
 			     break;
 			    case 4:
 			      //we just started, do a gong at one second..
-			      if(dt%120000<50)
+			      if(dt%30000<25)
 			      {
     		      console.log("eventcounter: "+eventcounter+" "+dt);
 			       createTone(false);
@@ -451,7 +451,7 @@ bar.onclick = function()
   {
 	  var reactiontime=5/1000;// works better on some browsers
     var attack=10;
-    var decay=20000;
+    var decay=100000;
     var notes=[];
     for(var i=0;i<chord[current_chord].length;i++)
     notes.push(chord[current_chord][i]+trans);
@@ -494,6 +494,16 @@ bar.onclick = function()
 	
 	
   var freq=55*Math.pow(2,notes[n]/12)+Math.random(); //max 1 hz out of tune in total.
+  // limit high notes
+  for(i=0;i<5;i++)
+  {
+    if(n>15 && Math.random()*1500<freq && special==false)
+    {
+      n-=12;// go down an octave and try again.
+      freq=55*Math.pow(2,notes[n]/12)+Math.random(); //max 1 hz out of tune in total.
+    }
+  }
+  
 
  // if(Math.random()*1500<freq && special==false) return; // these notes will not be played, but still generated..
     
@@ -523,7 +533,7 @@ bar.onclick = function()
   	    console.log("waking up the gong");
   	  }else
   	  {
-  	    decay=60000;
+  	    decay=30000;
   	  }
   	}
 
@@ -571,6 +581,13 @@ bar.onclick = function()
   }
   function start()
   {
+    
+    //we just had a click, enable wakelock
+    noSleep.enable(); // keep the screen on!
+    wakeLockEnabled = true;
+    toggleEl.value = "Wake Lock is enabled";
+
+
     start_time=Date.now();
 	var startsound=  document.getElementById("startsound");
 	console.log(startsound);
