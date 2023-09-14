@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>serene Bells</h1>
-  <div class="version">v23.9.14.08.35</div>
+  <div class="version">v23.9.14.08.39</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -379,7 +379,7 @@ bar.onclick = function()
 			     break;
 			    case 4:
 			      //we just started, do a gong at one second..
-			      if(dt%40000<25) // I breath about once every 16 seconds slow, 3 times in 32 seconds fast, so..
+			      if(dt%12000<25) // I breath about once every 24 seconds slow, so..
 			      {
     		      console.log("eventcounter: "+eventcounter+" "+dt);
 			       createTone(false);
