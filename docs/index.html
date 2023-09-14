@@ -370,7 +370,7 @@ bar.onclick = function()
 			     break;
 			    case 3:
 			      //we just started, do a gong at one second..
-			      if(dt>16000)
+			      if(dt>17000)
 			      {
 			        eventcounter++;
 		      console.log("eventcounter: "+eventcounter+" "+dt);
@@ -379,7 +379,7 @@ bar.onclick = function()
 			     break;
 			    case 4:
 			      //we just started, do a gong at one second..
-			      if(dt%32000<25) // I breath once every 16 seconds slow, 3 times in 32 seconds fast, so..
+			      if(dt%35000<25) // I breath about once every 16 seconds slow, 3 times in 32 seconds fast, so..
 			      {
     		      console.log("eventcounter: "+eventcounter+" "+dt);
 			       createTone(false);
