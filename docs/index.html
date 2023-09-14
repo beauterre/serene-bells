@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>serene Bells</h1>
-  <div class="version">v23.9.14.08.41</div>
+  <div class="version">v23.9.14.08.48</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -381,6 +381,16 @@ bar.onclick = function()
 			      //we just started, do a gong at one second..
 			      if(dt%16000<25) // I breath about once every 32 seconds slow, so..
 			      {
+			        eventcounter=5;
+    		      console.log("eventcounter: "+eventcounter+" "+dt);
+			       createTone(false);
+			      }
+			     break;
+			    case 5:
+			      //we just started, do a gong at one second..
+			      if(dt%16000<25) // I breath about once every 32 seconds slow, so..
+			      {
+			        eventcounter=4;
     		      console.log("eventcounter: "+eventcounter+" "+dt);
 			       createTone(false);
 			      }
@@ -488,6 +498,8 @@ bar.onclick = function()
 	if(tuning=="charging")
 	{
 			n=8;
+			if(eventcounter==4) n=7;
+			if(eventcounter==5) n=14;
 	}
 	if(tuning=="complete") last_note=n;
 	
