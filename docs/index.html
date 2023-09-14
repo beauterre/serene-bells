@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>serene Bells</h1>
-  <div class="version">v23.9.14.08.48</div>
+  <div class="version">v23.9.14.08.50</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -565,9 +565,13 @@ bar.onclick = function()
   	
    if(tuning=="charging")
   	{
-  	  if(eventcounter>3)
+  	  if(eventcounter==4)
   	  {
   	    voldim=0.1;
+  	  }
+  	  if(eventcounter==5)
+  	  {
+  	    voldim=3;
   	  }
   	}
 
