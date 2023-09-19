@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>serene Bells</h1>
-  <div class="version">v23.9.19.12.43</div>
+  <div class="version">v23.9.19.12.53</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -506,6 +506,8 @@ bar.onclick = function()
 	
 	
   var freq=55*Math.pow(2,notes[n]/12)+Math.random(); //max 1 hz out of tune in total.
+// longer decay for lower notes
+  decay+=(10000000/freq)*Math.random();
   // limit high notes
   for(i=0;i<5;i++)
   {
