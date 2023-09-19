@@ -127,7 +127,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 </head>
 <body>
   <h1>serene Bells</h1>
-  <div class="version">v23.9.14.09.00</div>
+  <div class="version">v23.9.19.12.43</div>
   <input id="time" type="number" value="20"> minutes.<br><br>
   <span id="countdown" type="duration"></span><br><br>
   <button id="start">START</button>
@@ -461,7 +461,7 @@ bar.onclick = function()
   {
 	  var reactiontime=5/1000;// works better on some browsers
     var attack=10;
-    var decay=100000;
+    var decay=10000; // 10 seconds default, not 100 :)
     var notes=[];
     for(var i=0;i<chord[current_chord].length;i++)
     notes.push(chord[current_chord][i]+trans);
