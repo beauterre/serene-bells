@@ -1,1 +1,5 @@
-just a placeholder for the folder :)
+I am just doing some changes to the interface, want to keep it non-religious, agnostic of any "method". 
+To be used with any..
+
+Also on a technical level, I am going to make it a "real" PWA, in the options you'll find an install button for offline usage.
+The playing styles will be presets, putting all options in place, but you'll be able to vary a lot more in the options for adaptability for a particular use.
